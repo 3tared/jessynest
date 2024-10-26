@@ -1,7 +1,15 @@
 import DashboardNav from '@/components/dashboard/DashboardNav';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { MenuIcon } from 'lucide-react';
+import { CircleUser, MenuIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -21,10 +29,28 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <MenuIcon className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side={'left'} className="">
-            <h1>Hello</h1>
+          <SheetContent side={'left'}>
+            <nav className="flex flex-col gap-6 mt-5 text-lg font-medium">
+              <DashboardNav />
+            </nav>
           </SheetContent>
         </Sheet>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant={'secondary'}
+              size={'icon'}
+              className="rounded-full"
+            >
+              <CircleUser className="w-5 h-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </header>
     </div>
   );
