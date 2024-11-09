@@ -8,11 +8,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { CircleUser, MenuIcon } from 'lucide-react';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { MenuIcon } from 'lucide-react';
+import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
+import Image from 'next/image';
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default async function DashboardLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  if (!user || user.email !== process.env.ADMIN_EMAIL) {
+    return redirect('/');
+  }
   return (
     <div className="flex max-w-7xl mx-auto w-full flex-col px-4 sm:px-6 lg:px-8">
       <header className="sticky top-0 flex items-center justify-between gap-4 h-16 border-b bg-white">
@@ -40,18 +53,28 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <Button
               variant={'secondary'}
               size={'icon'}
-              className="rounded-full"
+              className="rounded-full focus-visible:ring-0"
+              style={{ '--tw-ring-shadow': 'none' } as React.CSSProperties}
             >
-              <CircleUser className="w-5 h-5" />
+              <Image
+                src={`${user.picture}`}
+                alt={`${user.given_name}`}
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <LogoutLink>Logout</LogoutLink>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
+      <main className="my-5">{children}</main>
     </div>
   );
 }
