@@ -96,8 +96,8 @@ const CreateProduct = () => {
               <Label>Product Images</Label>
               <UploadDropzone
                 endpoint="imageUploader"
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 onClientUploadComplete={(res) => {
-                  console.log(res);
                   toast({
                     variant: 'default',
                     duration: 3000,
@@ -110,7 +110,10 @@ const CreateProduct = () => {
                   toast({
                     variant: 'destructive',
                     title: 'Uh oh! Something went wrong.',
-                    description: error.message,
+                    description:
+                      error.message == 'Invalid config: FileCountMismatch'
+                        ? "You Can't Upload More Than 10 Images"
+                        : error.message,
                     duration: 3000,
                   });
                 }}
@@ -119,7 +122,7 @@ const CreateProduct = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button>Submit</Button>
+          <Button>Create Product</Button>
         </CardFooter>
       </Card>
     </form>
