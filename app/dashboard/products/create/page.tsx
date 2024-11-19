@@ -1,7 +1,9 @@
-'use client';
-import { createProduct } from '@/app/actions';
-import { UploadDropzone } from '@/app/utils/uploadthing';
-import { Button } from '@/components/ui/button';
+'use client'; // Enables the usage of client-side rendering in a Next.js application.
+
+// Import necessary utilities and components.
+import { createProduct } from '@/app/actions'; // Action for product creation.
+import { UploadDropzone } from '@/app/utils/uploadthing'; // Component for uploading files.
+import { Button } from '@/components/ui/button'; // Reusable Button component.
 import {
   Card,
   CardContent,
@@ -9,30 +11,32 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@/components/ui/card'; // UI Card components for layout.
+import { Input } from '@/components/ui/input'; // Input component for text input.
+import { Label } from '@/components/ui/label'; // Label component for input fields.
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, XIcon } from 'lucide-react';
-import Link from 'next/link';
-import { useFormState } from 'react-dom';
-import { useForm } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
-import { productSchema } from '@/app/utils/zodSchemas';
-import { useState } from 'react';
-import Image from 'next/image';
-import { categories, productStatus } from '@/app/data';
+} from '@/components/ui/select'; // Select dropdown components.
+import { Switch } from '@/components/ui/switch'; // Toggle switch component.
+import { Textarea } from '@/components/ui/textarea'; // Textarea component for multiline input.
+import { useToast } from '@/hooks/use-toast'; // Hook for displaying toast notifications.
+import { motion, AnimatePresence } from 'framer-motion'; // Animation library for React.
+import { ChevronLeft, XIcon } from 'lucide-react'; // Icon components.
+import Link from 'next/link'; // Next.js link for navigation.
+import { useFormState } from 'react-dom'; // Hook for form state management.
+import { useForm } from '@conform-to/react'; // Form management library.
+import { parseWithZod } from '@conform-to/zod'; // Parsing utility with Zod validation.
+import { productSchema } from '@/app/utils/zodSchemas'; // Zod schema for product validation.
+import { useState } from 'react'; // React state management hook.
+import Image from 'next/image'; // Next.js optimized image component.
+import { categories, productStatus } from '@/app/data'; // Predefined product categories and statuses.
+import SubmitButton from '@/components/SubmitButton/SubmitButton'; // Custom SubmitButton component.
 
+// Animation variants for Framer Motion animations.
 const animationVariants = {
   hidden: { opacity: 0, scale: 0.9 },
   visible: { opacity: 1, scale: 1 },
@@ -40,19 +44,20 @@ const animationVariants = {
 };
 
 const CreateProduct = () => {
-  const { toast } = useToast();
-  const [images, setImages] = useState<string[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [lastResult, formAction] = useFormState(createProduct, undefined);
+  const { toast } = useToast(); // Toast notification instance.
+  const [images, setImages] = useState<string[]>([]); // State for uploaded images.
+  const [isOpen, setIsOpen] = useState(false); // State to toggle the image upload UI.
+  const [lastResult, formAction] = useFormState(createProduct, undefined); // Form state and submission handler.
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: productSchema });
+      return parseWithZod(formData, { schema: productSchema }); // Validate form data with Zod schema.
     },
-    shouldValidate: 'onBlur',
-    shouldRevalidate: 'onInput',
+    shouldValidate: 'onBlur', // Validate on input blur.
+    shouldRevalidate: 'onInput', // Revalidate on input changes.
   });
 
+  // Handler for deleting images from the state.
   const handleDelete = (idx: number) => {
     const newImages = images.filter((_, i) => i !== idx);
     setImages(newImages);
@@ -63,7 +68,9 @@ const CreateProduct = () => {
   };
 
   return (
+    // Form submission setup with form id and action
     <form id={form.id} onSubmit={form.onSubmit} action={formAction}>
+      {/* Header section with back button and title */}
       <div className="flex items-center gap-4">
         <Button size={'icon'} variant={'outline'}>
           <Link href={'/dashboard/products'}>
@@ -74,6 +81,7 @@ const CreateProduct = () => {
           Create New Product
         </h1>
       </div>
+      {/* Card container for product details */}
       <Card className="mt-5">
         <CardHeader>
           <CardTitle>Product Details</CardTitle>
@@ -81,6 +89,7 @@ const CreateProduct = () => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-6">
+            {/* Product Name Field */}
             <div className="flex flex-col gap-3">
               <Label htmlFor="name">Product Name</Label>
               <Input
@@ -92,7 +101,6 @@ const CreateProduct = () => {
                 defaultValue={fields.name.initialValue}
                 className="duration-100 focus-visible:ring-offset-1 focus-visible:ring-1"
               />
-
               <AnimatePresence>
                 {fields.name.errors && (
                   <motion.p
@@ -107,6 +115,7 @@ const CreateProduct = () => {
                 )}
               </AnimatePresence>
             </div>
+            {/* Product Description Field */}
             <div className="flex flex-col gap-3">
               <Label htmlFor="description">Product Description</Label>
               <Textarea
@@ -134,6 +143,7 @@ const CreateProduct = () => {
               </AnimatePresence>
             </div>
             <div className="flex flex-col gap-3">
+              {/* Product Price Field */}
               <Label htmlFor="price">Product Price</Label>
               <Input
                 type="number"
@@ -159,6 +169,7 @@ const CreateProduct = () => {
               </AnimatePresence>
             </div>
             <div className="flex flex-col gap-3">
+              {/* Product Stock Field */}
               <Label htmlFor="stock">Product Stock</Label>
               <Input
                 type="number"
@@ -183,6 +194,7 @@ const CreateProduct = () => {
                 )}
               </AnimatePresence>
             </div>
+            {/* isFeatured Product Field */}
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <Switch
@@ -209,6 +221,7 @@ const CreateProduct = () => {
                 )}
               </AnimatePresence>
             </div>
+            {/* Product Status Field */}
             <div className="flex flex-col gap-3">
               <Label>Product Status</Label>
               <Select
@@ -241,6 +254,7 @@ const CreateProduct = () => {
                 )}
               </AnimatePresence>
             </div>
+            {/* Product Category Field */}
             <div className="flex flex-col gap-3">
               <Label>Product Category</Label>
               <Select
@@ -273,6 +287,7 @@ const CreateProduct = () => {
                 )}
               </AnimatePresence>
             </div>
+            {/* Image Upload Section */}
             <div className="flex flex-col gap-4">
               <Label>Product Images</Label>
               <input
@@ -282,8 +297,10 @@ const CreateProduct = () => {
                 name={fields.images.name}
                 defaultValue={fields.images.initialValue?.toString()}
               />
+              {/* Conditional rendering for uploaded images */}
               {images.length > 0 ? (
                 <div className="flex gap-5 flex-wrap">
+                  {/* Render uploaded images */}
                   <AnimatePresence>
                     {images.map((url, idx) => (
                       <motion.div
@@ -301,6 +318,7 @@ const CreateProduct = () => {
                           height={100}
                           className="w-full h-full object-cover rounded-lg border"
                         />
+                        {/* Delete button for each image */}
                         <Button
                           variant={'destructive'}
                           type="button"
@@ -312,6 +330,7 @@ const CreateProduct = () => {
                       </motion.div>
                     ))}
                   </AnimatePresence>
+                  {/* Add More Images button for uploading more */}
                   <Button
                     type="button"
                     onClick={() => setIsOpen(true)}
@@ -324,6 +343,7 @@ const CreateProduct = () => {
                   </Button>
                 </div>
               ) : (
+                // Upload dropzone for adding images
                 <UploadDropzone
                   endpoint="imageUploader"
                   onClientUploadComplete={(res) => {
@@ -356,6 +376,7 @@ const CreateProduct = () => {
                   }}
                 />
               )}
+              {/* Conditional rendering for upload more images box */}
               <AnimatePresence>
                 {isOpen && (
                   <motion.div
@@ -409,7 +430,7 @@ const CreateProduct = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button>Create Product</Button>
+          <SubmitButton /> {/* Submit button */}
         </CardFooter>
       </Card>
     </form>
