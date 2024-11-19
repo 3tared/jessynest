@@ -21,11 +21,13 @@ model Product {
   name        String
   description String
   status      ProductStatus
-  price       Decimal
+  price       Int
   images      String[]
   category    Category
+  stock       Int
   isFeatured  Boolean       @default(false)
   createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 enum ProductStatus {

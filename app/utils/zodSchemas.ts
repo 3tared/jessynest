@@ -11,7 +11,8 @@ export const productSchema = z.object({
     .max(500, 'Description must be less than 500 characters long'),
   status: z.enum(['draft', 'published', 'archived']),
   price: z.number().min(1, 'Price must be greater than 0'),
-  images: z.array(z.string().min(1, 'at least one image is required')),
+  images: z.array(z.string()).min(1, 'at least one image is required'),
   category: z.enum(['men', 'women', 'kids']),
   isFeatured: z.boolean().optional().default(false),
+  stock: z.number().min(1, 'Stock must be greater than 0'),
 });
